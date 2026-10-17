@@ -1,0 +1,58 @@
+name: Publicar LP na VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-lp
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      HOST: ${{ secrets.VPS_HOST }}
+      USER_: ${{ secrets.VPS_USER }}
+      SITE_PATH: ${{ secrets.VPS_PATH }}
+      PORT: ${{ secrets.VPS_PORT || '22' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Conferir segredos
+        run: |
+          for v in HOST USER_ SITE_PATH; do
+            if [ -z "${!v}" ]; then echo "Segredo ausente: $v"; exit 1; fi
+          done
+
+      - name: Preparar SSH
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$PORT" -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Configurar servidor (nginx)
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$PORT" "$USER_@$HOST" \
+            "sudo bash -s -- '$SITE_PATH' '$USER_'" < deploy/setup-server.sh
+
+      - name: Enviar arquivos do site
+        run: |
+          rsync -az --delete --chmod=D755,F644 \
+            -e "ssh -i ~/.ssh/deploy_key -p $PORT" \
+            site/ "$USER_@$HOST:$SITE_PATH/"
+
+      - name: Verificar no ar
+        run: |
+          sleep 2
+          code=$(curl -s -o /dev/null -w '%{http_code}' "http://$HOST/")
+          echo "HTTP $code"
+          test "$code" = "200"
+
+      - name: Limpar chave
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
