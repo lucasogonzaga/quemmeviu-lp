@@ -25,7 +25,7 @@ Documentação completa: `docs/DOCUMENTACAO.md`.
 - Repositório público por causa do faturamento do GitHub Actions (privado não roda).
 
 ## Pendências
-- HTTPS: definir subdomínio (ex.: lp.quemmeviu.com.br) e onde está o DNS. Se Cloudflare: proxy + SSL Flexible. Senão: registro A + abrir 443 no Lightsail + certbot via workflow.
+- HTTPS em www.quemmeviu.com.br (substitui o site atual): roteiro em `docs/HTTPS.md`; `deploy/setup-server.sh` aceita o domínio como 3º argumento. (Antigo:) definir subdomínio (ex.: lp.quemmeviu.com.br) e onde está o DNS. Se Cloudflare: proxy + SSL Flexible. Senão: registro A + abrir 443 no Lightsail + certbot via workflow.
 - IP estático no Lightsail.
 - Link do "Documento de credenciamento Senatran" no rodapé (hoje só texto).
 - Validar com o cliente: autorização para citar a B3, papel da Baptista Luz, escopo do 24/7.
