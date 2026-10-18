@@ -2,6 +2,8 @@
 
 Landing page da campanha da Quem Me Viu (GCC credenciada pela SENATRAN) + página interativa "Jornada GCC". Cliente da agência do Lucas. Idioma de trabalho: português.
 
+Documentação completa: `docs/DOCUMENTACAO.md`.
+
 ## Estrutura
 - `src/` — **fontes editáveis** (formato Claude Design `.dc.html`: `<x-dc>`, `<helmet>`, estilos inline, `style-hover`, `{{ }}` e um `<script type="text/x-dc">` com a lógica). Edite aqui.
   - `Landing Jornada GCC.dc.html` → landing
