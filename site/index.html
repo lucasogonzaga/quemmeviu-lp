@@ -53,8 +53,9 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
 
 <section data-screen-label="02 Clientes" style="padding:clamp(72px,9vw,120px) clamp(20px,5vw,72px);background:linear-gradient(180deg,#0d1d4f,#10215a 50%,#0d1d4f)">
   <div style="max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:48px">
-    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px">
-      <sc-for list="{{ clients }}" as="c" hint-placeholder-count="3">
+    <h2 style="margin:0;max-width:880px;font-family:Sora,sans-serif;font-weight:700;font-size:clamp(30px,3.8vw,48px);line-height:1.1;letter-spacing:-.02em;text-wrap:balance">Conheça quem optou pela Quem Me Viu como sua GCC.</h2>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px">
+      <sc-for list="{{ clients }}" as="c" hint-placeholder-count="2">
         <div style="box-sizing:border-box;height:clamp(76px,8vw,104px);border-radius:20px;border:1.5px solid #4ff59a;background:#10215a;box-shadow:0 18px 40px -14px rgba(79,245,154,.6),0 0 28px rgba(79,245,154,.18);display:flex;align-items:center;justify-content:center;padding:0 12px;text-align:center;font-family:Sora,sans-serif;font-weight:700;font-size:clamp(17px,1.8vw,22px);color:#eef3f7">{{ c }}</div>
       </sc-for>
     </div>
@@ -302,7 +303,7 @@ const COMMITTEE = [
   ['André Trench', 'Finanças', 'https://www.linkedin.com/in/andr%C3%A9-trench-4a369894', 'uploads/comite/andre-trench.png'],
   ['Patricia Cardoso', 'Tecnologia e Produto', 'https://www.linkedin.com/in/patricia-cardoso-7a166920', 'uploads/comite/patricia-cardoso.png']
 ].map(([name, area, li, foto]) => ({ name, area, li, foto }));
-const CLIENTS = ['B3', 'PID', 'Icetran'];
+const CLIENTS = ['PID', 'Icetran'];
 
 class Component extends DCLogic {
   state = { w: window.innerWidth, revealed: false, reduce: false, faq: -1 };
