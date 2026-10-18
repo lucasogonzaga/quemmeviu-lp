@@ -21,7 +21,7 @@ Documentação completa: `docs/DOCUMENTACAO.md`.
 ## Servidor
 - AWS Lightsail, Amazon Linux 2023, usuário `ec2-user`, IP **44.204.204.85** (ainda não é IP estático).
 - Site em `/var/www/lp`, nginx. Hoje só HTTP (porta 443 fechada no firewall do Lightsail; o Lucas não tem acesso à AWS).
-- Segredos do Actions: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`, `VPS_PATH` (+ `VPS_PORT` opcional). Nunca peça/manuseie a chave.
+- Segredos do Actions: `VPS_HOST`, `VPS_USER`, `VPS_DEPLOY_KEY`, `VPS_PATH` (+ `VPS_PORT` opcional). `VPS_DEPLOY_KEY` é uma chave exclusiva, restrita no servidor (`/usr/local/bin/lp-rsync-only`) a rsync em `/var/www/lp`; não dá shell. Mudanças no nginx (`deploy/setup-server.sh`) o deploy não faz mais: quem administra o servidor roda o script. Nunca peça/manuseie a chave.
 - Repositório público por causa do faturamento do GitHub Actions (privado não roda).
 
 ## Pendências
