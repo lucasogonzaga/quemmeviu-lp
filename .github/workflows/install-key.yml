@@ -19,15 +19,26 @@ jobs:
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/k && chmod 600 ~/.ssh/k
           ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
-          ssh -i ~/.ssh/k "$USER_@$HOST" "command -v rrsync || ls /usr/share/doc/rsync* | head; rsync --version | head -1"
           ssh -i ~/.ssh/k "$USER_@$HOST" "sudo bash -s" <<EOF
           set -e
-          RR=\$(command -v rrsync || true)
-          [ -n "\$RR" ] || { echo "rrsync ausente"; exit 1; }
-          install -d -m 700 -o $USER_ -g $USER_ ~$USER_/.ssh
-          grep -qF "$PUBKEY" ~$USER_/.ssh/authorized_keys || echo "restrict,command=\"\$RR $SITE_PATH\" $PUBKEY" >> ~$USER_/.ssh/authorized_keys
-          chown $USER_:$USER_ ~$USER_/.ssh/authorized_keys
-          tail -n 3 ~$USER_/.ssh/authorized_keys | cut -c1-110
+          cat > /usr/local/bin/lp-rsync-only <<'WRAP'
+          #!/bin/bash
+          # Chave de deploy da LP: aceita somente rsync em modo servidor gravando em $SITE_PATH.
+          deny() { echo "comando negado" >&2; exit 1; }
+          cmd="\$SSH_ORIGINAL_COMMAND"
+          case "\$cmd" in "rsync --server "*) ;; *) deny;; esac
+          case "\$cmd" in *[';&|\$\`<>()']*) deny;; esac
+          read -ra a <<< "\$cmd"
+          last="\${a[-1]}"
+          [ "\${last%/}" = "$SITE_PATH" ] || deny
+          for x in "\${a[@]:0:\${#a[@]}-1}"; do case "\$x" in */*) deny;; esac; done
+          exec "\${a[@]}"
+          WRAP
+          chmod 755 /usr/local/bin/lp-rsync-only
+          install -d -m 700 -o $USER_ -g $USER_ /home/$USER_/.ssh
+          grep -qF "$PUBKEY" /home/$USER_/.ssh/authorized_keys || echo "restrict,command=\"/usr/local/bin/lp-rsync-only\" $PUBKEY" >> /home/$USER_/.ssh/authorized_keys
+          tail -n 2 /home/$USER_/.ssh/authorized_keys | cut -c1-120
+          cat /usr/local/bin/lp-rsync-only | head -5
           EOF
       - if: always()
         run: rm -f ~/.ssh/k
