@@ -17,6 +17,17 @@ if command -v chcon >/dev/null 2>&1; then chcon -R -t httpd_sys_content_t "$SITE
 # O server padrão do nginx.conf deixa de ser o default; o da LP assume.
 sed -i 's/ default_server//g' /etc/nginx/nginx.conf
 
+# add_header em um location descarta os do server; por isso os cabeçalhos ficam num arquivo incluído nos três lugares.
+cat > /etc/nginx/lp-security-headers.conf <<'HDR'
+# Cabeçalhos de segurança. HSTS: ativar só depois que o HTTPS estiver no ar.
+add_header X-Content-Type-Options "nosniff" always;
+add_header X-Frame-Options "DENY" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" always;
+# add_header Strict-Transport-Security "max-age=31536000" always;
+HDR
+
 cat > /etc/nginx/conf.d/quemmeviu-lp.conf <<NGINX
 server {
     listen 80 default_server;
@@ -26,18 +37,24 @@ server {
     index index.html;
     charset utf-8;
 
+    server_tokens off;
+
+    include /etc/nginx/lp-security-headers.conf;
+
     gzip on;
     gzip_types text/css application/javascript image/svg+xml text/html;
 
     location / {
         try_files \$uri \$uri/ \$uri.html =404;
     }
-    location ~* \.(png|jpe?g|svg|js|css|webp)$ {
+    location ~* \.(png|jpe?g|svg|js|css|webp|woff2)$ {
         expires 7d;
         add_header Cache-Control "public";
+        include /etc/nginx/lp-security-headers.conf;
     }
     location ~* \.html$ {
         add_header Cache-Control "no-cache";
+        include /etc/nginx/lp-security-headers.conf;
     }
 }
 NGINX

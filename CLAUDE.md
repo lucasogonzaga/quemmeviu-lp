@@ -9,7 +9,7 @@ Documentação completa: `docs/DOCUMENTACAO.md`.
   - `Landing Jornada GCC.dc.html` → landing
   - `Jornada GCC.dc.html` → jornada interativa (perguntas Q / resultados R no script)
 - `site/` — o que vai para o ar. **Não editar à mão** `index.html`/`jornada.html`: rode `python3 deploy/build.py`.
-  - `support.js` (runtime do Claude Design; carrega React 18.3.1 do unpkg), `logos/`, `img/hero.jpg`, `uploads/comite/` (fotos do comitê).
+  - `support.js` (runtime do Claude Design; React 18.3.1 hospedado em `vendor/`, com SRI mantido), `fonts/` (Sora e DM Sans locais, sem Google Fonts), `logos/`, `img/hero.jpg`, `uploads/comite/` (fotos do comitê).
 - `deploy/setup-server.sh` — configura nginx na VPS (idempotente).
 - `.github/workflows/deploy.yml` — a cada push na `main`: configura nginx, faz rsync de `site/` e checa HTTP 200.
 
@@ -29,3 +29,7 @@ Documentação completa: `docs/DOCUMENTACAO.md`.
 - IP estático no Lightsail.
 - Link do "Documento de credenciamento Senatran" no rodapé (hoje só texto).
 - Validar com o cliente: autorização para citar a B3, papel da Baptista Luz, escopo do 24/7.
+
+## Segurança
+- Cabeçalhos (CSP, nosniff, X-Frame-Options etc.) em `deploy/setup-server.sh`. Sem recursos externos: não adicione scripts/fontes/imagens de terceiros sem ajustar a CSP.
+- Ativar HSTS (linha comentada no script) só depois que o HTTPS estiver no ar.
