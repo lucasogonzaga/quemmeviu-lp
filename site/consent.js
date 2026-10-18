@@ -7,7 +7,7 @@
   'use strict';
   var KEY = 'qmv_consent';
   var VERSION = 1;
-  var IDS = { gtm: 'GTM-PDDHV4PK', ads: 'AW-18041366792', clarity: 'wx9mphq0ba' };
+  var IDS = { gtm: 'GTM-PDDHV4PK', ads: 'AW-18517888153', clarity: 'wx9mphq0ba' };
   var POLICY_URL = 'politica-de-privacidade.html';
 
   window.dataLayer = window.dataLayer || [];
