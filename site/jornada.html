@@ -119,7 +119,7 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
 <script type="text/x-dc" data-dc-script>
 const Q = {
   p1: { n: 1, pos: 8, title: 'Sua empresa já fez a solicitação no Credencia?', options: [['Ainda não', 'r1'], ['Comecei, mas está em rascunho', 'r1'], ['Sim, já enviei', 'p2']] },
-  p2: { n: 2, pos: 25, title: 'Qual é a situação dos seus casos de uso?', options: [['Em análise pela SENATRAN', 'r2'], ['Devolvido para ajustes', 'r3'], ['Não aprovado', 'r4'], ['Aprovado em parte', 'r5'], ['Aprovado', 'p3']] },
+  p2: { n: 2, pos: 25, title: 'Qual é a situação dos seus casos de uso?', options: [['Em análise pela SENATRAN', 'r2'], ['Aprovado em parte', 'r5'], ['Não aprovado', 'r4'], ['Aprovado', 'p3']] },
   p3: { n: 3, pos: 42, title: 'Sua empresa já contratou o serviço de dados do Serpro (Consulta Online ou Datavalid)?', options: [['Ainda não', 'r6'], ['Sim', 'p4']] },
   p4: { n: 4, pos: 58, title: 'Sua empresa já contratou uma GCC?', options: [['Ainda não', 'r7'], ['Sim', 'p5']] },
   p5: { n: 5, pos: 75, title: 'Sua operação já está em produção?', options: [['Ainda não', 'r8'], ['Sim', 'r9']] }
@@ -127,7 +127,6 @@ const Q = {
 const R = {
   r1: { wa: 'Olá! Ainda não enviei os casos de uso ao Credencia. Quero o apoio da Quem Me Viu para estruturar o pedido.', stages: [0], title: 'Hora de começar pelo Credencia', text: 'Sua empresa ainda não enviou os casos de uso para a SENATRAN.', next: 'Fale com um consultor para estruturar seus casos de uso.' },
   r2: { wa: 'Olá! Meu pedido no Credencia está em análise. Quero já contratar e homologar a GCC com a Quem Me Viu.', stages: [0], title: 'Seu pedido está em análise', text: 'A SENATRAN tem até 60 dias para analisar. Você não precisa esperar para escolher sua GCC.', next: 'Fale com um consultor e já contrate e homologue a GCC durante a análise.' },
-  r3: { wa: 'Olá! Meu pedido no Credencia voltou para ajustes. Quero o apoio da Quem Me Viu para corrigir e reenviar.', stages: [0], title: 'Seu pedido voltou para ajustes', text: 'A SENATRAN pediu correções antes de decidir.', next: 'Fale com um consultor para corrigir e reenviar.' },
   r4: { wa: 'Olá! Meu pedido no Credencia não foi aprovado. Quero o apoio da Quem Me Viu para refazer o pedido.', stages: [0], title: 'Seu pedido não foi aprovado', text: 'É possível reestruturar os casos de uso e solicitar de novo.', next: 'Fale com um consultor para refazer o pedido.' },
   r5: { wa: 'Olá! Meu pedido no Credencia foi aprovado em parte. Quero o apoio da Quem Me Viu para avançar nas duas frentes.', stages: [0, 1], title: 'Seu pedido foi aprovado em parte', text: 'A parte aprovada já pode avançar. A outra precisa de ajustes.', next: 'Fale com um consultor para avançar nas duas frentes.' },
   r6: { wa: 'Olá! Meu pedido no Credencia foi aprovado. Quero contratar o Serpro e a Quem Me Viu como minha GCC.', stages: [1], title: 'Aprovado! Agora é contratar', text: 'Falta contratar o serviço de dados do Serpro e vincular a sua GCC.', next: 'Fale com um consultor para contratar o Serpro e já vincular a GCC.' },

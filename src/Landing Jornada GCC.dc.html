@@ -21,7 +21,7 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
 
 <header style="position:absolute;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px 24px;padding:24px clamp(20px,5vw,72px)">
   <img src="logos/logo-quem-me-viu.svg" alt="Quem Me Viu" style="height:73px;width:auto">
-  <div style="display:flex;align-items:center;gap:12px;color:#dce5ec;font-size:15px;font-weight:500;white-space:nowrap"><span>uma empresa do grupo</span><img src="logos/jb3.png" alt="JB3" style="height:30px;width:auto"></div>
+  <div style="display:flex;align-items:center;gap:12px;color:#dce5ec;font-size:15px;font-weight:500;white-space:nowrap"><span>Uma solução do grupo</span><img src="logos/jb3.png" alt="JB3" style="height:30px;width:auto"></div>
 </header>
 
 <section data-screen-label="01 Abertura" style="position:relative;min-height:92vh;display:flex;align-items:center;padding:140px clamp(20px,5vw,72px) 96px;background:url('uploads/hero-sp.jpg') center/cover no-repeat">
@@ -189,7 +189,7 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
         <h2 style="margin:0;font-family:Sora,sans-serif;font-weight:700;font-size:clamp(30px,3.8vw,48px);line-height:1.1;letter-spacing:-.02em;text-wrap:balance">Comitê consultivo externo</h2>
         <p style="margin:0;font-size:18px;line-height:1.55;color:#b9c6d2;text-wrap:pretty">A Quem Me Viu conta com um comitê consultivo externo e crítico, formado por executivos com o mesmo perfil dos clientes que atende. São eles que desafiam e validam a nossa entrega. Nós temos o prazer de apresentar cada pessoa que faz tamanha diferença.</p>
       </div>
-      <div style="display:flex;gap:10px">
+      <div style="display:{{ arrowsDisplay }};gap:10px">
         <button onClick="{{ prev }}" aria-label="Anterior" style="width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;color:#eef3f7;font-size:20px;cursor:pointer" style-hover="border-color:#4ff59a;color:#4ff59a">←</button>
         <button onClick="{{ next }}" aria-label="Próximo" style="width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;color:#eef3f7;font-size:20px;cursor:pointer" style-hover="border-color:#4ff59a;color:#4ff59a">→</button>
       </div>
@@ -250,7 +250,7 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
     <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px">
       <div style="flex:0 1 340px;display:flex;flex-direction:column;gap:22px;align-items:flex-start">
         <img src="logos/logo-quem-me-viu.svg" alt="Quem Me Viu" style="height:48px;width:auto">
-        <div style="display:flex;align-items:center;gap:12px;color:#dce5ec;font-size:14px;font-weight:500;white-space:nowrap"><span>uma empresa do grupo</span><img src="logos/jb3.png" alt="JB3" style="height:26px;width:auto"></div>
+        <div style="display:flex;align-items:center;gap:12px;color:#dce5ec;font-size:14px;font-weight:500;white-space:nowrap"><span>Uma solução do grupo</span><img src="logos/jb3.png" alt="JB3" style="height:26px;width:auto"></div>
       </div>
       <div style="flex:1 1 560px;display:flex;flex-direction:column;gap:20px;align-items:{{ ftAlign }};text-align:{{ ftText }}">
         <span style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#4ff59a;font-weight:700">Contatos</span>
@@ -292,15 +292,16 @@ const FAQ = [
   ['Quanto custa?', 'R$ 0,80 por evento de consentimento ou ciência, pago à Quem Me Viu. O Serpro cobra os dados à parte.'],
   ['Como funciona a integração?', 'Por API, de forma síncrona, assíncrona ou em lote, com homologação no ambiente do Serpro.']
 ];
+// Comitê: ativo = true aparece na página; false fica guardado até a aprovação da pessoa (mudar para true para ativar).
 const COMMITTEE = [
-  ['Vitor Magnani', 'Finanças', 'https://www.linkedin.com/in/vmagnani', 'uploads/comite/vitor-magnani.png'],
-  ['Gustavo Mistrinelli', 'Produto', 'https://www.linkedin.com/in/guga-m', 'uploads/comite/gustavo-mistrinelli.png'],
-  ['Samanta Oliveira', 'Proteção de Dados', 'https://www.linkedin.com/in/samantaoliveiraa', 'uploads/comite/samanta-oliveira.png'],
-  ['Glaucia Miyazaki', 'Produto', 'https://www.linkedin.com/in/glaucias', 'uploads/comite/glaucia-miyazaki.png'],
-  ['Bruno Salles', 'Produto', 'https://www.linkedin.com/in/brunocpsalles', 'uploads/comite/bruno-salles.png'],
-  ['André Trench', 'Finanças', 'https://www.linkedin.com/in/andr%C3%A9-trench-4a369894', 'uploads/comite/andre-trench.png'],
-  ['Patricia Cardoso', 'Tecnologia e Produto', 'https://www.linkedin.com/in/patricia-cardoso-7a166920', 'uploads/comite/patricia-cardoso.png']
-].map(([name, area, li, foto]) => ({ name, area, li, foto }));
+  ['Vitor Magnani', 'Finanças', 'https://www.linkedin.com/in/vmagnani', 'uploads/comite/vitor-magnani.png', true],
+  ['Gustavo Mistrinelli', 'Produto', 'https://www.linkedin.com/in/guga-m', 'uploads/comite/gustavo-mistrinelli.png', true],
+  ['Samanta Oliveira', 'Proteção de Dados', 'https://www.linkedin.com/in/samantaoliveiraa', 'uploads/comite/samanta-oliveira.png', false],
+  ['Glaucia Miyazaki', 'Produto', 'https://www.linkedin.com/in/glaucias', 'uploads/comite/glaucia-miyazaki.png', false],
+  ['Bruno Salles', 'Produto', 'https://www.linkedin.com/in/brunocpsalles', 'uploads/comite/bruno-salles.png', false],
+  ['André Trench', 'Finanças', 'https://www.linkedin.com/in/andr%C3%A9-trench-4a369894', 'uploads/comite/andre-trench.png', false],
+  ['Patricia Cardoso', 'Tecnologia e Produto', 'https://www.linkedin.com/in/patricia-cardoso-7a166920', 'uploads/comite/patricia-cardoso.png', false]
+].map(([name, area, li, foto, ativo]) => ({ name, area, li, foto, ativo })).filter(m => m.ativo);
 const CLIENTS = ['PID', 'Icetran'];
 
 class Component extends DCLogic {
@@ -339,7 +340,8 @@ class Component extends DCLogic {
       mband: { clip: R ? 'inset(0 0 0 0)' : 'inset(0 0 100% 0)', tr: rd ? none : 'clip-path .8s cubic-bezier(.6,0,.2,1) .65s' },
       mbox: { clip: R ? 'inset(0 0 0 0)' : 'inset(0 100% 0 0)', tr: rd ? none : 'clip-path .6s cubic-bezier(.6,0,.2,1) 1.4s' },
       clients: CLIENTS, committee: COMMITTEE,
-      cardBasis: mobile ? '80%' : w < 1100 ? 'calc((100% - 40px) / 3)' : 'calc((100% - 60px) / 4)',
+      cardBasis: mobile ? '80%' : COMMITTEE.length <= 2 ? 'calc((100% - 20px) / 2)' : w < 1100 ? 'calc((100% - 40px) / 3)' : 'calc((100% - 60px) / 4)',
+      arrowsDisplay: COMMITTEE.length > (mobile ? 1 : w < 1100 ? 3 : 4) ? 'flex' : 'none',
       prev: () => this.scroll(-1), next: () => this.scroll(1),
       faqs: FAQ.map(([q, a], i) => ({ q, a, open: faq === i, rot: faq === i ? 'rotate(45deg)' : 'none', toggle: () => this.setState(s => ({ faq: s.faq === i ? -1 : i })) }))
     };
