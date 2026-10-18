@@ -32,9 +32,9 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
     <div style="position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,2vw,24px)">
       <div style="position:absolute;top:19px;left:16.67%;right:16.67%;height:3px;border-radius:3px;background:rgba(238,243,247,.12)"></div>
       <div style="position:absolute;top:19px;left:16.67%;width:{{ fillW }};height:3px;border-radius:3px;background:#4ff59a;box-shadow:0 0 12px rgba(79,245,154,.6);transition:{{ railTr }}"></div>
-      <div style="position:absolute;top:8px;left:{{ markerLeft }};width:25px;height:25px;margin-left:-12.5px;border-radius:50%;background:#4ff59a;border:5px solid #0d1d4f;box-sizing:border-box;box-shadow:0 0 0 2px #4ff59a,0 0 26px rgba(79,245,154,.9);z-index:2;transition:{{ markerTr }}"></div>
+      <div style="position:absolute;top:8px;left:{{ markerLeft }};width:25px;height:25px;margin-left:-12.5px;border-radius:50%;background:#4ff59a;border:5px solid #0d1d4f;box-sizing:border-box;box-shadow:0 0 0 2px #4ff59a,0 0 26px rgba(79,245,154,.9);z-index:2;opacity:{{ markerOp }};transition:{{ markerTr }}"></div>
       <sc-for list="{{ stages }}" as="s" hint-placeholder-count="3">
-        <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center">
+        <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center">
           <span style="width:40px;height:40px;border-radius:50%;background:{{ s.nodeBg }};border:2px solid {{ s.nodeBorder }};color:{{ s.nodeColor }};display:flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-weight:800;font-size:15px;box-shadow:0 0 0 6px #0d1d4f;transition:background .4s,border-color .4s,color .4s">{{ s.n }}</span>
           <span style="font-family:Sora,sans-serif;font-weight:600;font-size:clamp(13px,1.6vw,17px);line-height:1.25;color:{{ s.color }};text-wrap:balance;transition:color .4s">{{ s.name }}</span>
           <sc-if value="{{ s.here }}" hint-placeholder-val="{{ false }}">
@@ -49,7 +49,7 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
       <div style="display:flex;justify-content:center"><span style="width:2px;height:100%;background:#4ff59a"></span></div>
     </div>
     <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;padding:14px 20px;border-radius:18px;background:#4ff59a;color:#0d1d4f;text-align:center">
-      <span style="font-family:Sora,sans-serif;font-weight:700;font-size:clamp(15px,1.7vw,19px)">Apoio jurídico, técnico e operacional</span>
+      <span style="font-family:Sora,sans-serif;font-weight:700;font-size:clamp(15px,1.7vw,19px)">Apoio jurídico, técnico e operacional da Quem Me Viu</span>
     </div>
   </div>
 
@@ -101,6 +101,9 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
   <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px">
     <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}">
       <button onClick="{{ back }}" style="display:flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;border:1.5px solid #4ff59a;background:rgba(79,245,154,.06);color:#4ff59a;font:inherit;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 0 22px rgba(79,245,154,.28)" style-hover="background:#4ff59a;color:#06120b">← Voltar</button>
+    </sc-if>
+    <sc-if value="{{ noBack }}" hint-placeholder-val="{{ true }}">
+      <a href="./" style="display:flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;border:1.5px solid #4ff59a;background:rgba(79,245,154,.06);color:#4ff59a;font:inherit;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 0 22px rgba(79,245,154,.28)" style-hover="background:#4ff59a;color:#06120b">← Voltar</a>
     </sc-if>
     <div style="margin-left:auto;display:flex;flex-wrap:wrap;gap:12px">
       <sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
@@ -168,7 +171,7 @@ class Component extends DCLogic {
       const on = active.includes(i), done = !on && i < Math.min(...active);
       return {
         n: i + 1, name, here: !isQ && on,
-        nodeBg: on ? '#4ff59a' : done ? 'rgba(79,245,154,.15)' : '#10215a',
+        nodeBg: on ? '#4ff59a' : done ? '#173d5a' : '#10215a',
         nodeBorder: on || done ? '#4ff59a' : 'rgba(238,243,247,.2)',
         nodeColor: on ? '#06120b' : done ? '#4ff59a' : '#8fa0b1',
         color: on ? '#ffffff' : done ? '#dce5ec' : '#8fa0b1'
@@ -179,8 +182,9 @@ class Component extends DCLogic {
     return {
       stages, headRef: this.headRef,
       markerLeft: pos + '%',
+      markerOp: isQ ? 1 : 0,
       fillW: Math.max(0, pos - 16.67) + '%',
-      markerTr: rd ? 'none' : `left .7s ${ease}`,
+      markerTr: rd ? 'none' : `left .7s ${ease}, opacity .3s ease`,
       railTr: rd ? 'none' : `width .7s ${ease}`,
       panelTf: phase === 'out' ? `translateX(${-off}px)` : phase === 'pre' ? `translateX(${off}px)` : 'none',
       panelOp: phase === 'idle' ? 1 : 0,
@@ -191,6 +195,7 @@ class Component extends DCLogic {
       r: r || {},
       waLink: r ? 'https://wa.me/5511926363815?text=' + encodeURIComponent(r.wa) : '#',
       canBack: history.length > 0,
+      noBack: history.length === 0,
       back: () => history.length && this.go(history[history.length - 1], history.slice(0, -1), -1),
       restart: () => this.go('p1', [], -1)
     };
