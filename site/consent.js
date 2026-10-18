@@ -2,12 +2,14 @@
  * Nada de terceiros carrega antes do consentimento. Categorias:
  *   necessarios (sempre ativo) · desempenho (Google Tag Manager, Microsoft Clarity) · publicidade (Google Ads)
  * A escolha fica em localStorage ("qmv_consent"). Reabrir: link com href="#cookies" ou window.qmvCookies.open().
+ * A conversão do Google Ads (clique no WhatsApp) só dispara com consentimento de publicidade.
  * Novas tags: carregue-as dentro de applyConsent() e libere os domínios na CSP (deploy/setup-server.sh). */
 (function () {
   'use strict';
   var KEY = 'qmv_consent';
   var VERSION = 1;
   var IDS = { gtm: 'GTM-PDDHV4PK', ads: 'AW-18517888153', clarity: 'wx9mphq0ba' };
+  var WHATSAPP_CONVERSION = 'AW-18517888153/cGW-CImzjaAdEJmZgv5E'; // Google Ads: clique no WhatsApp
   var POLICY_URL = 'politica-de-privacidade.html';
 
   window.dataLayer = window.dataLayer || [];
@@ -185,7 +187,11 @@
     var a = e.target && e.target.closest && e.target.closest('a[href="#cookies"],[data-cookie-settings]');
     if (a) { e.preventDefault(); openModal(); return; }
     var w = e.target && e.target.closest && e.target.closest('a[href*="wa.me/"]');
-    if (w) window.dataLayer.push({ event: 'whatsapp_click' });
+    if (w) {
+      window.dataLayer.push({ event: 'whatsapp_click' });
+      var c = read();
+      if (c && c.ads) gtag('event', 'conversion', { send_to: WHATSAPP_CONVERSION });
+    }
   });
 
   function init() {
