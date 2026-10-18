@@ -32,7 +32,7 @@ add_header X-Content-Type-Options "nosniff" always;
 add_header X-Frame-Options "DENY" always;
 add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
-add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" always;
+add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.clarity.ms https://scripts.clarity.ms https://www.googleadservices.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://pagead2.googlesyndication.com https://*.doubleclick.net https://www.googleadservices.com https://www.googletagmanager.com https://www.google.com https://www.google.com.br https://googleads.g.doubleclick.net https://*.google-analytics.com https://*.clarity.ms https://c.bing.com; font-src 'self'; connect-src 'self' https://pagead2.googlesyndication.com https://*.doubleclick.net https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://*.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://www.google.com.br https://*.clarity.ms https://c.bing.com; frame-src https://www.googletagmanager.com https://td.doubleclick.net https://bid.g.doubleclick.net; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" always;
 HDR
 if [ "$HTTPS" = 1 ]; then
   echo 'add_header Strict-Transport-Security "max-age=31536000" always;' >> /etc/nginx/lp-security-headers.conf

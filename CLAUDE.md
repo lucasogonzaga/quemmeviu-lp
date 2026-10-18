@@ -30,6 +30,10 @@ Documentação completa: `docs/DOCUMENTACAO.md`.
 - Link do "Documento de credenciamento Senatran" no rodapé (hoje só texto).
 - Validar com o cliente: autorização para citar a B3, papel da Baptista Luz, escopo do 24/7.
 
+## Cookies / LGPD
+- `site/consent.js`: banner e modal de consentimento; GTM, Google Ads e Clarity só carregam após aceite (função `applyConsent`). `src/legal/` guarda o texto da política e dos termos; `deploy/build.py` gera `politica-de-privacidade.html` e `termos-de-uso.html`.
+- Nova tag de terceiros = (1) carregar em `applyConsent`, (2) liberar domínios na CSP em `deploy/setup-server.sh` e rodar o script no servidor.
+
 ## Segurança
 - Cabeçalhos (CSP, nosniff, X-Frame-Options etc.) em `deploy/setup-server.sh`. Sem recursos externos: não adicione scripts/fontes/imagens de terceiros sem ajustar a CSP.
 - Ativar HSTS (linha comentada no script) só depois que o HTTPS estiver no ar.
