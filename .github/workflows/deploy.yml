@@ -5,10 +5,15 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: deploy-lp
   cancel-in-progress: false
 
+# A chave VPS_DEPLOY_KEY só permite rsync em /var/www/lp (wrapper lp-rsync-only no servidor).
+# A configuração do nginx (deploy/setup-server.sh) é feita à parte, por quem administra o servidor.
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -28,17 +33,12 @@ jobs:
 
       - name: Preparar SSH
         env:
-          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          SSH_KEY: ${{ secrets.VPS_DEPLOY_KEY }}
         run: |
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p "$PORT" -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
-
-      - name: Configurar servidor (nginx)
-        run: |
-          ssh -i ~/.ssh/deploy_key -p "$PORT" "$USER_@$HOST" \
-            "sudo bash -s -- '$SITE_PATH' '$USER_'" < deploy/setup-server.sh
 
       - name: Enviar arquivos do site
         run: |
