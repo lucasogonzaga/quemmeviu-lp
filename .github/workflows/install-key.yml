@@ -1,0 +1,33 @@
+name: Instalar chave de deploy restrita (uso unico)
+on:
+  workflow_dispatch:
+    inputs:
+      pubkey:
+        description: Chave publica nova
+        required: true
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    env:
+      HOST: ${{ secrets.VPS_HOST }}
+      USER_: ${{ secrets.VPS_USER }}
+      SITE_PATH: ${{ secrets.VPS_PATH }}
+      SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+      PUBKEY: ${{ inputs.pubkey }}
+    steps:
+      - run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/k && chmod 600 ~/.ssh/k
+          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh -i ~/.ssh/k "$USER_@$HOST" "command -v rrsync || ls /usr/share/doc/rsync* | head; rsync --version | head -1"
+          ssh -i ~/.ssh/k "$USER_@$HOST" "sudo bash -s" <<EOF
+          set -e
+          RR=\$(command -v rrsync || true)
+          [ -n "\$RR" ] || { echo "rrsync ausente"; exit 1; }
+          install -d -m 700 -o $USER_ -g $USER_ ~$USER_/.ssh
+          grep -qF "$PUBKEY" ~$USER_/.ssh/authorized_keys || echo "restrict,command=\"\$RR $SITE_PATH\" $PUBKEY" >> ~$USER_/.ssh/authorized_keys
+          chown $USER_:$USER_ ~$USER_/.ssh/authorized_keys
+          tail -n 3 ~$USER_/.ssh/authorized_keys | cut -c1-110
+          EOF
+      - if: always()
+        run: rm -f ~/.ssh/k
