@@ -199,7 +199,7 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
         <div style="flex:0 0 {{ cardBasis }};scroll-snap-align:start;padding:28px 24px;border-radius:24px;background:linear-gradient(160deg,#172a66,#10215a);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:14px;box-sizing:border-box">
           <img src="{{ m.foto }}" alt="{{ m.name }}" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:2px solid rgba(79,245,154,.6);background:#10215a;box-sizing:border-box">
           <span style="font-family:Sora,sans-serif;font-weight:700;font-size:19px;line-height:1.2">{{ m.name }}</span>
-          <span style="font-size:15px;line-height:1.4;color:#4ff59a;font-weight:500">{{ m.area }}</span>
+          <span style="font-size:15px;line-height:1.4;color:#b9c6d2;font-weight:400"><strong style="color:#4ff59a;font-weight:700">{{ m.area }}</strong>{{ m.empresas }}</span>
           <a href="{{ m.li }}" target="_blank" rel="noopener" aria-label="LinkedIn de {{ m.name }}" style="margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:#dce5ec" style-hover="color:#4ff59a"><svg viewBox="0 0 24 24" style="width:18px;height:18px;flex:none"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"></path></svg>LinkedIn</a>
         </div>
       </sc-for>
@@ -291,16 +291,16 @@ const FAQ = [
   ['Quanto custa?', 'R$ 0,80 por evento de consentimento ou ciência, pago à Quem Me Viu. O Serpro cobra os dados à parte.'],
   ['Como funciona a integração?', 'Por API, de forma síncrona, assíncrona ou em lote, com homologação no ambiente do Serpro.']
 ];
-// Comitê: ativo = true aparece na página; false fica guardado até a aprovação da pessoa (mudar para true para ativar).
+// Comitê: o 5º campo (ativo) true aparece na página; o 6º é o texto das empresas, que vai depois da área (ex.: ' | iFood, Loggi'); false fica guardado até a aprovação da pessoa (mudar para true para ativar).
 const COMMITTEE = [
-  ['Vitor Magnani', 'Finanças', 'https://www.linkedin.com/in/vmagnani', 'uploads/comite/vitor-magnani.png', true],
-  ['Gustavo Mistrinelli', 'Produto', 'https://www.linkedin.com/in/guga-m', 'uploads/comite/gustavo-mistrinelli.png', true],
-  ['Samanta Oliveira', 'Proteção de Dados', 'https://www.linkedin.com/in/samantaoliveiraa', 'uploads/comite/samanta-oliveira.png', false],
-  ['Glaucia Miyazaki', 'Produto', 'https://www.linkedin.com/in/glaucias', 'uploads/comite/glaucia-miyazaki.png', true],
-  ['Bruno Salles', 'Produto', 'https://www.linkedin.com/in/brunocpsalles', 'uploads/comite/bruno-salles.png', false],
-  ['André Trench', 'Finanças', 'https://www.linkedin.com/in/andr%C3%A9-trench-4a369894', 'uploads/comite/andre-trench.png', false],
-  ['Patricia Cardoso', 'Tecnologia e Produto', 'https://www.linkedin.com/in/patricia-cardoso-7a166920', 'uploads/comite/patricia-cardoso.png', false]
-].map(([name, area, li, foto, ativo]) => ({ name, area, li, foto, ativo })).filter(m => m.ativo);
+  ['Vitor Magnani', 'Finanças', 'https://www.linkedin.com/in/vmagnani', 'uploads/comite/vitor-magnani.png', true, ' | Rede Líderes, iFood, Loggi'],
+  ['Gustavo Mistrinelli', 'Produto', 'https://www.linkedin.com/in/guga-m', 'uploads/comite/gustavo-mistrinelli.png', true, ' | NSTech, 99, Globant'],
+  ['Samanta Oliveira', 'Proteção de Dados', 'https://www.linkedin.com/in/samantaoliveiraa', 'uploads/comite/samanta-oliveira.png', false, ''],
+  ['Glaucia Miyazaki', 'Produto', 'https://www.linkedin.com/in/glaucias', 'uploads/comite/glaucia-miyazaki.png', true, ' | Memed, OLX, Stone'],
+  ['Bruno Salles', 'Produto', 'https://www.linkedin.com/in/brunocpsalles', 'uploads/comite/bruno-salles.png', false, ''],
+  ['André Trench', 'Finanças', 'https://www.linkedin.com/in/andr%C3%A9-trench-4a369894', 'uploads/comite/andre-trench.png', false, ''],
+  ['Patricia Cardoso', 'Tecnologia e Produto', 'https://www.linkedin.com/in/patricia-cardoso-7a166920', 'uploads/comite/patricia-cardoso.png', false, '']
+].map(([name, area, li, foto, ativo, empresas]) => ({ name, area, li, foto, ativo, empresas })).filter(m => m.ativo);
 const CLIENTS = ['PID', 'Icetran'];
 
 class Component extends DCLogic {
