@@ -28,7 +28,7 @@ button:hover{background:#9dffc6;color:#06120b}
   <span class="tag">Uso interno do comercial</span>
   <h1>Disparo do e-mail da campanha</h1>
   <ol>
-    <li>Clique em <b>Copiar assunto</b> e cole no campo "Assunto" de uma nova mensagem no Outlook.</li>
+    <li>Abra uma nova mensagem no Outlook e use este assunto: <b id="assunto">A partir de 27/10, o acesso aos serviços da SENATRAN exige integração com uma GCC</b></li>
     <li>Clique em <b>Copiar e-mail (imagens embutidas)</b>, vá ao corpo da mensagem e cole (<b>Ctrl+V</b> no Windows, <b>Cmd+V</b> no Mac). Se as imagens aparecerem quebradas, volte e use <b>Copiar e-mail (imagens por link)</b>.</li>
     <li>Coloque o destinatário no campo <b>Para</b> (um por mensagem), confira e envie.</li>
   </ol>
@@ -37,8 +37,6 @@ button:hover{background:#9dffc6;color:#06120b}
 <div class="bar">
   <button class="pri" id="b-emb" disabled>Preparando imagens…</button>
   <button id="b-email">Copiar e-mail (imagens por link)</button>
-  <button id="b-assunto">Copiar assunto</button>
-  <button id="b-txt">Copiar versão em texto simples</button>
 </div>
 <div id="st" role="status"></div>
 <div class="prev"><div id="email">
@@ -125,8 +123,6 @@ function copiarTexto(t,ok){
   else fallback(t,ok);
 }
 function fallback(t,ok){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');msg(ok);}catch(e){msg('Não consegui copiar. Selecione e copie manualmente.');}a.remove();}
-document.getElementById('b-assunto').onclick=function(){copiarTexto(ASSUNTO,'Assunto copiado. Cole no campo Assunto.');};
-document.getElementById('b-txt').onclick=function(){copiarTexto(TEXTO,'Texto simples copiado.');};
 function paraDataURL(url){return fetch(url).then(function(r){return r.blob();}).then(function(b){return new Promise(function(res){var f=new FileReader();f.onload=function(){res(f.result);};f.readAsDataURL(b);});});}
 function htmlEmbutido(){
   var el=document.getElementById('email');var clone=el.cloneNode(true);var orig=el.querySelectorAll('img');var imgs=clone.querySelectorAll('img');
