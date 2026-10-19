@@ -29,13 +29,14 @@ button:hover{background:#9dffc6;color:#06120b}
   <h1>Disparo do e-mail da campanha</h1>
   <ol>
     <li>Clique em <b>Copiar assunto</b> e cole no campo "Assunto" de uma nova mensagem no Outlook.</li>
-    <li>Clique em <b>Copiar e-mail</b>, vá ao corpo da mensagem e cole (<b>Ctrl+V</b> no Windows, <b>Cmd+V</b> no Mac).</li>
+    <li>Clique em <b>Copiar e-mail (imagens embutidas)</b>, vá ao corpo da mensagem e cole (<b>Ctrl+V</b> no Windows, <b>Cmd+V</b> no Mac). Se as imagens aparecerem quebradas, volte e use <b>Copiar e-mail (imagens por link)</b>.</li>
     <li>Coloque o destinatário no campo <b>Para</b> (um por mensagem), confira e envie.</li>
   </ol>
   <div class="dica"><b>Antes de enviar para valer:</b> mande uma mensagem de teste para você mesmo, para um Gmail e abra no celular. Confira se as imagens aparecem e se o botão verde abre o WhatsApp. Se as imagens vierem bloqueadas, avise o time de marketing.</div>
 </div>
 <div class="bar">
-  <button class="pri" id="b-email">Copiar e-mail</button>
+  <button class="pri" id="b-emb">Copiar e-mail (imagens embutidas)</button>
+  <button id="b-email">Copiar e-mail (imagens por link)</button>
   <button id="b-assunto">Copiar assunto</button>
   <button id="b-txt">Copiar versão em texto simples</button>
 </div>
@@ -126,6 +127,20 @@ function copiarTexto(t,ok){
 function fallback(t,ok){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');msg(ok);}catch(e){msg('Não consegui copiar. Selecione e copie manualmente.');}a.remove();}
 document.getElementById('b-assunto').onclick=function(){copiarTexto(ASSUNTO,'Assunto copiado. Cole no campo Assunto.');};
 document.getElementById('b-txt').onclick=function(){copiarTexto(TEXTO,'Texto simples copiado.');};
+function paraDataURL(url){return fetch(url).then(function(r){return r.blob();}).then(function(b){return new Promise(function(res){var f=new FileReader();f.onload=function(){res(f.result);};f.readAsDataURL(b);});});}
+function htmlEmbutido(){
+  var el=document.getElementById('email');var clone=el.cloneNode(true);var orig=el.querySelectorAll('img');var imgs=clone.querySelectorAll('img');
+  return Promise.all(Array.prototype.map.call(orig,function(o){return paraDataURL(o.src);})).then(function(urls){
+    imgs.forEach(function(i,k){i.setAttribute('src',urls[k]);});
+    return '<meta charset="utf-8">'+clone.innerHTML;
+  });
+}
+document.getElementById('b-emb').onclick=function(){
+  if(!(navigator.clipboard&&window.ClipboardItem&&window.isSecureContext)){msg('Este navegador não permite copiar assim. Use a opção "imagens por link".');return;}
+  msg('Preparando as imagens...');
+  var item=new ClipboardItem({'text/html':htmlEmbutido().then(function(h){return new Blob([h],{type:'text/html'});}),'text/plain':new Blob([TEXTO],{type:'text/plain'})});
+  navigator.clipboard.write([item]).then(function(){msg('E-mail copiado (imagens embutidas). Agora cole no corpo da mensagem.');},function(){msg('Não consegui copiar. Tente a opção "imagens por link".');});
+};
 document.getElementById('b-email').onclick=function(){
   var el=document.getElementById('email');
   var clone=el.cloneNode(true);var orig=el.querySelectorAll('img');
