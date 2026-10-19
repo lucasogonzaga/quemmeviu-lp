@@ -36,7 +36,13 @@ for src, dst in [('Landing Jornada GCC.dc.html', 'index.html'), ('Jornada GCC.dc
 LEGAL = {
     'politica-de-privacidade': 'Política de Privacidade',
     'termos-de-uso': 'Termos de Uso',
+    'politica-de-seguranca': 'Política de Segurança da Informação',
+    'politica-para-fornecedores': 'Política para Fornecedores',
+    'politica-integrada': 'Política Integrada',
 }
+# Documentos da JB3 (texto copiado de jb3ti.com.br): recebem a nota de origem.
+JB3_DOCS = {'politica-de-seguranca', 'politica-para-fornecedores', 'politica-integrada'}
+NAV = ''.join(f'<a href="{slug}.html">{title}</a>' for slug, title in LEGAL.items())
 TEMPLATE = '''<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -61,6 +67,9 @@ h3{{font-family:Sora,sans-serif;font-weight:600;font-size:19px;margin:28px 0 8px
 p,li{{color:#dce5ec}}
 li{{margin:4px 0}}
 strong{{color:#fff}}
+nav.docs{{padding:28px clamp(20px,5vw,72px) 8px;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-wrap:wrap;gap:10px 26px;font-size:15px}}
+nav.docs b{{width:100%;color:#fff;font-family:Sora,sans-serif;font-size:16px}}
+.nota{{margin:-12px 0 28px;color:#b9c6d2;font-size:16px}}
 footer{{padding:32px clamp(20px,5vw,72px);border-top:1px solid rgba(255,255,255,.1);font-size:14px;color:#b9c6d2;display:flex;flex-wrap:wrap;gap:12px 28px}}
 </style>
 </head>
@@ -68,8 +77,9 @@ footer{{padding:32px clamp(20px,5vw,72px);border-top:1px solid rgba(255,255,255,
 <header><a href="./" aria-label="Quem Me Viu"><img src="logos/logo-quem-me-viu.svg" alt="Quem Me Viu"></a><a class="back" href="./">← Voltar para a página inicial</a></header>
 <main>
 <h1>{title}</h1>
-{body}
+{nota}{body}
 </main>
+<nav class="docs" aria-label="Outras políticas"><b>Políticas e documentos</b>{nav}<a href="#cookies">Definições de cookies</a></nav>
 <footer><span>Quem Me Viu é uma solução da JB3 Softwares S.A. | CNPJ: 58.493.015/0001-19 | São Paulo/SP</span><a href="#cookies">Definições de cookies</a></footer>
 <script src="consent.js" defer></script>
 </body>
@@ -77,5 +87,6 @@ footer{{padding:32px clamp(20px,5vw,72px);border-top:1px solid rgba(255,255,255,
 '''
 for slug, title in LEGAL.items():
     body = (ROOT / 'src' / 'legal' / f'{slug}.html').read_text(encoding='utf-8')
-    (ROOT / 'site' / f'{slug}.html').write_text(TEMPLATE.format(title=title, body=body), encoding='utf-8')
+    nota = '<p class="nota">Documento da JB3 Softwares S.A., empresa responsável pela Quem Me Viu.</p>\n' if slug in JB3_DOCS else ''
+    (ROOT / 'site' / f'{slug}.html').write_text(TEMPLATE.format(title=title, body=body, nota=nota, nav=NAV), encoding='utf-8')
     print('ok', slug + '.html')
