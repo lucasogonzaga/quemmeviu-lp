@@ -35,7 +35,7 @@ button:hover{background:#9dffc6;color:#06120b}
   <div class="dica"><b>Antes de enviar para valer:</b> mande uma mensagem de teste para você mesmo, para um Gmail e abra no celular. Confira se as imagens aparecem e se o botão verde abre o WhatsApp. Se as imagens vierem bloqueadas, avise o time de marketing.</div>
 </div>
 <div class="bar">
-  <button class="pri" id="b-emb">Copiar e-mail (imagens embutidas)</button>
+  <button class="pri" id="b-emb" disabled>Preparando imagens…</button>
   <button id="b-email">Copiar e-mail (imagens por link)</button>
   <button id="b-assunto">Copiar assunto</button>
   <button id="b-txt">Copiar versão em texto simples</button>
@@ -135,11 +135,13 @@ function htmlEmbutido(){
     return '<meta charset="utf-8">'+clone.innerHTML;
   });
 }
+var HTML_EMB=null;
+htmlEmbutido().then(function(h){HTML_EMB=h;var b=document.getElementById('b-emb');b.disabled=false;b.textContent='Copiar e-mail (imagens embutidas)';},function(e){var b=document.getElementById('b-emb');b.textContent='Imagens embutidas indisponível';b.disabled=true;});
 document.getElementById('b-emb').onclick=function(){
+  if(!HTML_EMB){msg('Ainda preparando as imagens. Aguarde um instante e clique de novo.');return;}
   if(!(navigator.clipboard&&window.ClipboardItem&&window.isSecureContext)){msg('Este navegador não permite copiar assim. Use a opção "imagens por link".');return;}
-  msg('Preparando as imagens...');
-  var item=new ClipboardItem({'text/html':htmlEmbutido().then(function(h){return new Blob([h],{type:'text/html'});}),'text/plain':new Blob([TEXTO],{type:'text/plain'})});
-  navigator.clipboard.write([item]).then(function(){msg('E-mail copiado (imagens embutidas). Agora cole no corpo da mensagem.');},function(){msg('Não consegui copiar. Tente a opção "imagens por link".');});
+  var item=new ClipboardItem({'text/html':new Blob([HTML_EMB],{type:'text/html'}),'text/plain':new Blob([TEXTO],{type:'text/plain'})});
+  navigator.clipboard.write([item]).then(function(){msg('E-mail copiado (imagens embutidas). Agora cole no corpo da mensagem.');},function(e){msg('Não consegui copiar ('+(e&&e.name?e.name:'erro')+'). Tente a opção "imagens por link".');});
 };
 document.getElementById('b-email').onclick=function(){
   var el=document.getElementById('email');
