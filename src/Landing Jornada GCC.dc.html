@@ -296,7 +296,7 @@ const COMMITTEE = [
   ['Vitor Magnani', 'Finanças', 'https://www.linkedin.com/in/vmagnani', 'uploads/comite/vitor-magnani.png', true],
   ['Gustavo Mistrinelli', 'Produto', 'https://www.linkedin.com/in/guga-m', 'uploads/comite/gustavo-mistrinelli.png', true],
   ['Samanta Oliveira', 'Proteção de Dados', 'https://www.linkedin.com/in/samantaoliveiraa', 'uploads/comite/samanta-oliveira.png', false],
-  ['Glaucia Miyazaki', 'Produto', 'https://www.linkedin.com/in/glaucias', 'uploads/comite/glaucia-miyazaki.png', false],
+  ['Glaucia Miyazaki', 'Produto', 'https://www.linkedin.com/in/glaucias', 'uploads/comite/glaucia-miyazaki.png', true],
   ['Bruno Salles', 'Produto', 'https://www.linkedin.com/in/brunocpsalles', 'uploads/comite/bruno-salles.png', false],
   ['André Trench', 'Finanças', 'https://www.linkedin.com/in/andr%C3%A9-trench-4a369894', 'uploads/comite/andre-trench.png', false],
   ['Patricia Cardoso', 'Tecnologia e Produto', 'https://www.linkedin.com/in/patricia-cardoso-7a166920', 'uploads/comite/patricia-cardoso.png', false]
@@ -339,7 +339,7 @@ class Component extends DCLogic {
       mband: { clip: R ? 'inset(0 0 0 0)' : 'inset(0 0 100% 0)', tr: rd ? none : 'clip-path .8s cubic-bezier(.6,0,.2,1) .65s' },
       mbox: { clip: R ? 'inset(0 0 0 0)' : 'inset(0 100% 0 0)', tr: rd ? none : 'clip-path .6s cubic-bezier(.6,0,.2,1) 1.4s' },
       clients: CLIENTS, committee: COMMITTEE,
-      cardBasis: mobile ? '80%' : COMMITTEE.length <= 2 ? 'calc((100% - 20px) / 2)' : w < 1100 ? 'calc((100% - 40px) / 3)' : 'calc((100% - 60px) / 4)',
+      cardBasis: mobile ? '80%' : COMMITTEE.length <= 2 ? 'calc((100% - 20px) / 2)' : COMMITTEE.length === 3 ? 'calc((100% - 40px) / 3)' : w < 1100 ? 'calc((100% - 40px) / 3)' : 'calc((100% - 60px) / 4)',
       arrowsDisplay: COMMITTEE.length > (mobile ? 1 : w < 1100 ? 3 : 4) ? 'flex' : 'none',
       prev: () => this.scroll(-1), next: () => this.scroll(1),
       faqs: FAQ.map(([q, a], i) => ({ q, a, open: faq === i, rot: faq === i ? 'rotate(45deg)' : 'none', toggle: () => this.setState(s => ({ faq: s.faq === i ? -1 : i })) }))
