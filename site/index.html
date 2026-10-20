@@ -54,8 +54,8 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
 <section data-screen-label="02 Clientes" style="padding:clamp(72px,9vw,120px) clamp(20px,5vw,72px);background:linear-gradient(180deg,#0d1d4f,#10215a 50%,#0d1d4f)">
   <div style="max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:48px">
     <h2 style="margin:0;max-width:880px;font-family:Sora,sans-serif;font-weight:700;font-size:clamp(30px,3.8vw,48px);line-height:1.1;letter-spacing:-.02em;text-wrap:balance">Conheça quem optou pela Quem Me Viu como sua GCC.</h2>
-    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px">
-      <sc-for list="{{ clients }}" as="c" hint-placeholder-count="3">
+    <div style="display:grid;grid-template-columns:{{ clientCols }};gap:20px">
+      <sc-for list="{{ clients }}" as="c" hint-placeholder-count="4">
         <div style="box-sizing:border-box;height:clamp(76px,8vw,104px);border-radius:20px;border:1.5px solid #4ff59a;background:#10215a;box-shadow:0 18px 40px -14px rgba(79,245,154,.6),0 0 28px rgba(79,245,154,.18);display:flex;align-items:center;justify-content:center;padding:0 12px"><img src="{{ c.logo }}" alt="{{ c.name }}" style="display:block;height:{{ c.h }};width:auto;max-width:82%;object-fit:contain"></div>
       </sc-for>
     </div>
@@ -203,7 +203,7 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
           <img src="{{ m.foto }}" alt="{{ m.name }}" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:2px solid rgba(79,245,154,.6);background:#10215a;box-sizing:border-box">
           <span style="font-family:Sora,sans-serif;font-weight:700;font-size:19px;line-height:1.2">{{ m.name }}</span>
           <span style="font-size:15px;line-height:1.4;color:#b9c6d2;font-weight:400"><strong style="color:#4ff59a;font-weight:700">{{ m.area }}</strong>{{ m.empresas }}</span>
-          <a href="{{ m.li }}" target="_blank" rel="noopener" aria-label="LinkedIn de {{ m.name }}" style="margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:#dce5ec" style-hover="color:#4ff59a"><svg viewBox="0 0 24 24" style="width:18px;height:18px;flex:none"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"></path></svg>LinkedIn</a>
+          <a href="{{ m.li }}" target="_blank" rel="noopener" aria-label="LinkedIn de {{ m.name }}" style="margin-top:auto;align-self:flex-start;display:{{ m.liShow }};align-items:center;gap:8px;font-size:14px;font-weight:500;color:#dce5ec" style-hover="color:#4ff59a"><svg viewBox="0 0 24 24" style="width:18px;height:18px;flex:none"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"></path></svg>LinkedIn</a>
         </div>
       </sc-for>
     </div>
@@ -302,12 +302,14 @@ const COMMITTEE = [
   ['Glaucia Miyazaki', 'Produto', 'https://www.linkedin.com/in/glaucias', 'uploads/comite/glaucia-miyazaki.png', true, ' | Memed, OLX, Stone'],
   ['Bruno Salles', 'Produto', 'https://www.linkedin.com/in/brunocpsalles', 'uploads/comite/bruno-salles.png', false, ''],
   ['André Trench', 'Finanças', 'https://www.linkedin.com/in/andr%C3%A9-trench-4a369894', 'uploads/comite/andre-trench.png', false, ''],
-  ['Patricia Cardoso', 'Tecnologia e Produto', 'https://www.linkedin.com/in/patricia-cardoso-7a166920', 'uploads/comite/patricia-cardoso.png', true, ' | CIEE, Banco BV, Banco Fibra']
-].map(([name, area, li, foto, ativo, empresas]) => ({ name, area, li, foto, ativo, empresas })).filter(m => m.ativo);
+  ['Patricia Cardoso', 'Tecnologia e Produto', 'https://www.linkedin.com/in/patricia-cardoso-7a166920', 'uploads/comite/patricia-cardoso.png', true, ' | CIEE, Banco BV, Banco Fibra'],
+  ['Carlos Danilo Pereira Tomaz', 'Cibersegurança e proteção de dados', '', 'uploads/comite/carlos-danilo-tomaz.png', true, '']
+].map(([name, area, li, foto, ativo, empresas]) => ({ name, area, li, foto, ativo, empresas, liShow: li ? 'inline-flex' : 'none' })).filter(m => m.ativo);
 const CLIENTS = [
   { name: 'B3', logo: 'logos/clientes/b3.png', h: 'clamp(50px,5.3vw,74px)' },
   { name: 'PID', logo: 'logos/clientes/pid.png', h: 'clamp(28px,3vw,44px)' },
-  { name: 'Icetran', logo: 'logos/clientes/icetran.png', h: 'clamp(35px,3.8vw,55px)' }
+  { name: 'Icetran', logo: 'logos/clientes/icetran.png', h: 'clamp(35px,3.8vw,55px)' },
+  { name: 'LW Tecnologia', logo: 'logos/clientes/lw.png', h: 'clamp(22px,2vw,30px)' }
 ];
 
 class Component extends DCLogic {
@@ -346,6 +348,7 @@ class Component extends DCLogic {
       mband: { clip: R ? 'inset(0 0 0 0)' : 'inset(0 0 100% 0)', tr: rd ? none : 'clip-path .8s cubic-bezier(.6,0,.2,1) .65s' },
       mbox: { clip: R ? 'inset(0 0 0 0)' : 'inset(0 100% 0 0)', tr: rd ? none : 'clip-path .6s cubic-bezier(.6,0,.2,1) 1.4s' },
       clients: CLIENTS, committee: COMMITTEE,
+      clientCols: mobile ? 'repeat(2,minmax(0,1fr))' : 'repeat(4,minmax(0,1fr))',
       cardBasis: mobile ? '80%' : COMMITTEE.length <= 2 ? 'calc((100% - 20px) / 2)' : COMMITTEE.length === 3 ? 'calc((100% - 40px) / 3)' : w < 1100 ? 'calc((100% - 40px) / 3)' : 'calc((100% - 60px) / 4)',
       arrowsDisplay: COMMITTEE.length > (mobile ? 1 : w < 1100 ? 3 : 4) ? 'flex' : 'none',
       prev: () => this.scroll(-1), next: () => this.scroll(1),
