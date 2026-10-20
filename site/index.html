@@ -17,6 +17,9 @@
 body{margin:0;background:#0d1d4f;color:#eef3f7;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
 :focus-visible{outline:3px solid #4ff59a;outline-offset:3px;border-radius:8px}
+@keyframes qmv-bob{0%,100%{transform:translateY(-2px)}50%{transform:translateY(5px)}}
+.qmv-bob{animation:qmv-bob 1.8s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.qmv-bob{animation:none}}
 </style>
 </helmet>
 
@@ -49,6 +52,7 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
       </div>
     </div>
   </div>
+  <button type="button" onClick="{{ goDown }}" aria-label="Rolar a página para ver mais" style="position:fixed;left:{{ cue.left }};right:{{ cue.right }};bottom:24px;margin-left:{{ cue.ml }};z-index:20;width:46px;height:46px;padding:0;border-radius:50%;border:1.5px solid rgba(79,245,154,.55);background:rgba(13,29,79,.6);color:#4ff59a;display:{{ cue.disp }};align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.35),0 0 18px rgba(79,245,154,.18);opacity:{{ cue.op }};pointer-events:{{ cue.pe }};transition:{{ cue.tr }}" style-hover="background:rgba(79,245,154,.2)"><svg class="qmv-bob" viewBox="0 0 24 24" aria-hidden="true" style="width:22px;height:22px" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"></path></svg></button>
 </section>
 
 <section data-screen-label="02 Clientes" style="padding:clamp(72px,9vw,120px) clamp(20px,5vw,72px);background:linear-gradient(180deg,#0d1d4f,#10215a 50%,#0d1d4f)">
@@ -313,25 +317,39 @@ const CLIENTS = [
 ];
 
 class Component extends DCLogic {
-  state = { w: window.innerWidth, revealed: false, reduce: false, faq: -1 };
+  state = { w: window.innerWidth, revealed: false, reduce: false, faq: -1, scrolled: false, cuePos: 'center' };
   stagesRef = React.createRef();
   trackRef = React.createRef();
   componentDidMount() {
-    this.onResize = () => this.setState({ w: window.innerWidth });
+    this.measureCue = () => {
+      // posição da seta de rolagem: centro, senão canto direito, senão oculta (para nunca cobrir texto da abertura)
+      const hero = document.querySelector('[data-screen-label="01 Abertura"]'); if (!hero || window.scrollY > 60) return;
+      const vw = window.innerWidth, vh = window.innerHeight, sz = 46, bt = 24, m = 12;
+      const cand = { center: [vw / 2 - sz / 2, vw / 2 + sz / 2], right: [vw - 28 - sz, vw - 28] };
+      const t = vh - bt - sz - m, b = vh - bt + m;
+      const els = [...hero.querySelectorAll('h1,p,a,span,strong')].map(e => e.getBoundingClientRect()).filter(q => q.width > 0 && q.height > 0 && q.bottom > t && q.top < b);
+      const free = k => !els.some(q => q.right > cand[k][0] - m && q.left < cand[k][1] + m);
+      const pos = free('center') ? 'center' : free('right') ? 'right' : 'none';
+      if (pos !== this.state.cuePos) this.setState({ cuePos: pos });
+    };
+    this.onResize = () => { this.setState({ w: window.innerWidth }); this.measureCue(); };
     window.addEventListener('resize', this.onResize);
+    this.onScroll = () => { const sc = window.scrollY > 60; if (sc !== this.state.scrolled) this.setState({ scrolled: sc }); };
+    window.addEventListener('scroll', this.onScroll, { passive: true }); this.onScroll();
+    window.addEventListener('load', this.measureCue); setTimeout(this.measureCue, 400); setTimeout(this.measureCue, 1500);
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { this.setState({ reduce: true, revealed: true }); return; }
     this.io = new IntersectionObserver(es => {
       if (es.some(e => e.isIntersecting)) { this.setState({ revealed: true }); this.io.disconnect(); }
     }, { threshold: 0.25 });
     if (this.stagesRef.current) this.io.observe(this.stagesRef.current);
   }
-  componentWillUnmount() { window.removeEventListener('resize', this.onResize); this.io && this.io.disconnect(); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('load', this.measureCue); this.io && this.io.disconnect(); }
   scroll(d) {
     const el = this.trackRef.current; if (!el) return;
     el.scrollBy({ left: d * el.clientWidth * 0.8, behavior: this.state.reduce ? 'auto' : 'smooth' });
   }
   renderVals() {
-    const { w, revealed: R, reduce: rd, faq } = this.state;
+    const { w, revealed: R, reduce: rd, faq, scrolled, cuePos } = this.state;
     const mobile = w < 760;
     const none = 'none';
     const stage = i => ({ op: R ? 1 : 0, tf: R ? 'none' : 'translateY(28px)', tr: rd ? none : `opacity .6s ease ${i * 0.2}s, transform .6s cubic-bezier(.2,.7,.2,1) ${i * 0.2}s` });
@@ -347,6 +365,8 @@ class Component extends DCLogic {
       band: { clip: R ? 'inset(0 0 0 0 round 28px)' : 'inset(0 100% 0 0 round 28px)', tr: rd ? none : 'clip-path .9s cubic-bezier(.6,0,.2,1) .65s' },
       mband: { clip: R ? 'inset(0 0 0 0)' : 'inset(0 0 100% 0)', tr: rd ? none : 'clip-path .8s cubic-bezier(.6,0,.2,1) .65s' },
       mbox: { clip: R ? 'inset(0 0 0 0)' : 'inset(0 100% 0 0)', tr: rd ? none : 'clip-path .6s cubic-bezier(.6,0,.2,1) 1.4s' },
+      cue: { disp: mobile ? 'none' : 'flex', op: (scrolled || cuePos === 'none') ? 0 : 1, pe: (scrolled || cuePos === 'none') ? 'none' : 'auto', left: cuePos === 'right' ? 'auto' : '50%', right: cuePos === 'right' ? '28px' : 'auto', ml: cuePos === 'right' ? '0' : '-23px', tr: rd ? none : 'opacity .35s ease, background .2s ease' },
+      goDown: () => { const el = document.querySelector('[data-screen-label="02 Clientes"]'); if (el) el.scrollIntoView({ behavior: rd ? 'auto' : 'smooth', block: 'start' }); },
       clients: CLIENTS, committee: COMMITTEE,
       clientCols: mobile ? 'repeat(2,minmax(0,1fr))' : 'repeat(4,minmax(0,1fr))',
       cardBasis: mobile ? '80%' : COMMITTEE.length <= 2 ? 'calc((100% - 20px) / 2)' : COMMITTEE.length === 3 ? 'calc((100% - 40px) / 3)' : w < 1100 ? 'calc((100% - 40px) / 3)' : 'calc((100% - 60px) / 4)',
