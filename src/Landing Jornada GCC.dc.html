@@ -56,8 +56,8 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
   <div style="max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:48px">
     <h2 style="margin:0;max-width:880px;font-family:Sora,sans-serif;font-weight:700;font-size:clamp(30px,3.8vw,48px);line-height:1.1;letter-spacing:-.02em;text-wrap:balance">Conheça quem optou pela Quem Me Viu como sua GCC.</h2>
     <div style="display:grid;grid-template-columns:{{ clientCols }};gap:20px">
-      <sc-for list="{{ clients }}" as="c" hint-placeholder-count="4">
-        <div style="box-sizing:border-box;height:clamp(76px,8vw,104px);border-radius:20px;border:1.5px solid #4ff59a;background:#10215a;box-shadow:0 18px 40px -14px rgba(79,245,154,.6),0 0 28px rgba(79,245,154,.18);display:flex;align-items:center;justify-content:center;padding:0 12px"><img src="{{ c.logo }}" alt="{{ c.name }}" style="display:block;height:{{ c.h }};width:auto;max-width:82%;object-fit:contain"></div>
+      <sc-for list="{{ clients }}" as="c" hint-placeholder-count="5">
+        <div style="box-sizing:border-box;grid-column:{{ c.span }};height:clamp(76px,8vw,104px);border-radius:20px;border:1.5px solid #4ff59a;background:#10215a;box-shadow:0 18px 40px -14px rgba(79,245,154,.6),0 0 28px rgba(79,245,154,.18);display:flex;align-items:center;justify-content:center;padding:0 12px"><img src="{{ c.logo }}" alt="{{ c.name }}" style="display:block;height:{{ c.h }};width:auto;max-width:82%;object-fit:contain"></div>
       </sc-for>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px">
@@ -310,7 +310,8 @@ const CLIENTS = [
   { name: 'B3', logo: 'logos/clientes/b3.png', h: 'clamp(50px,5.3vw,74px)' },
   { name: 'PID', logo: 'logos/clientes/pid.png', h: 'clamp(28px,3vw,44px)' },
   { name: 'Icetran', logo: 'logos/clientes/icetran.png', h: 'clamp(35px,3.8vw,55px)' },
-  { name: 'LW Tecnologia', logo: 'logos/clientes/lw.png', h: 'clamp(22px,2vw,30px)' }
+  { name: 'LW Tecnologia', logo: 'logos/clientes/lw.png', h: 'clamp(22px,2vw,30px)' },
+  { name: 'Tecnol', logo: 'logos/clientes/tecnol.png', h: 'clamp(26px,2.5vw,36px)' }
 ];
 
 class Component extends DCLogic {
@@ -364,8 +365,8 @@ class Component extends DCLogic {
       mbox: { clip: R ? 'inset(0 0 0 0)' : 'inset(0 100% 0 0)', tr: rd ? none : 'clip-path .6s cubic-bezier(.6,0,.2,1) 1.4s' },
       cue: { disp: mobile ? 'none' : 'flex', op: (scrolled || cuePos === 'none') ? 0 : 1, pe: (scrolled || cuePos === 'none') ? 'none' : 'auto', left: cuePos === 'right' ? 'auto' : '50%', right: cuePos === 'right' ? '28px' : 'auto', ml: cuePos === 'right' ? '0' : '-23px', tr: rd ? none : 'opacity .35s ease, background .2s ease' },
       goDown: () => { const el = document.querySelector('[data-screen-label="02 Clientes"]'); if (el) el.scrollIntoView({ behavior: rd ? 'auto' : 'smooth', block: 'start' }); },
-      clients: CLIENTS, committee: COMMITTEE,
-      clientCols: mobile ? 'repeat(2,minmax(0,1fr))' : 'repeat(4,minmax(0,1fr))',
+      clients: CLIENTS.map((c, i) => ({ ...c, span: mobile && CLIENTS.length % 2 === 1 && i === CLIENTS.length - 1 ? 'span 2' : 'auto' })), committee: COMMITTEE,
+      clientCols: mobile ? 'repeat(2,minmax(0,1fr))' : w < 1000 ? 'repeat(3,minmax(0,1fr))' : `repeat(${CLIENTS.length},minmax(0,1fr))`,
       cardBasis: mobile ? '80%' : COMMITTEE.length <= 2 ? 'calc((100% - 20px) / 2)' : COMMITTEE.length === 3 ? 'calc((100% - 40px) / 3)' : w < 1100 ? 'calc((100% - 40px) / 3)' : 'calc((100% - 60px) / 4)',
       arrowsDisplay: COMMITTEE.length > (mobile ? 1 : w < 1100 ? 3 : 4) ? 'flex' : 'none',
       prev: () => this.scroll(-1), next: () => this.scroll(1),
