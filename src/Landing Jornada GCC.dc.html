@@ -257,6 +257,28 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
   </div>
 </section>
 
+<section data-screen-label="08 Blog" style="display:{{ blogDisplay }};padding:clamp(72px,9vw,120px) clamp(20px,5vw,72px)">
+  <div style="max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:36px">
+    <div style="display:flex;flex-direction:column;gap:12px;max-width:720px">
+      <h2 style="margin:0;font-family:Sora,sans-serif;font-weight:700;font-size:clamp(30px,3.8vw,48px);line-height:1.1;letter-spacing:-.02em">Blog</h2>
+      <p style="margin:0;font-size:18px;line-height:1.55;color:#b9c6d2;text-wrap:pretty">Artigos sobre governança, segurança e proteção de dados.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:{{ blogCols }};gap:24px">
+      <sc-for list="{{ blog }}" as="p" hint-placeholder-count="1">
+        <a href="{{ p.href }}" style="display:flex;flex-direction:{{ blogDir }};gap:clamp(18px,3vw,40px);padding:16px;border-radius:28px;background:linear-gradient(160deg,#172a66,#10215a);border:1px solid rgba(255,255,255,.1);color:#eef3f7;text-decoration:none;box-sizing:border-box;min-width:0" style-hover="border-color:rgba(79,245,154,.55)">
+          <img src="{{ p.img }}" alt="{{ p.titulo }}" loading="lazy" style="display:block;width:{{ blogImgW }};height:auto;aspect-ratio:1200/627;object-fit:cover;border-radius:20px;flex:none;max-width:100%">
+          <div style="display:flex;flex-direction:column;gap:12px;justify-content:center;padding:6px 10px 10px">
+            <span style="font-size:14px;font-weight:600;color:#4ff59a;letter-spacing:.03em">{{ p.data }}</span>
+            <span style="font-family:Sora,sans-serif;font-weight:700;font-size:clamp(20px,2.2vw,28px);line-height:1.2;letter-spacing:-.01em">{{ p.titulo }}</span>
+            <span style="font-size:16px;line-height:1.55;color:#b9c6d2">{{ p.resumo }}</span>
+            <span style="margin-top:6px;font-size:16px;font-weight:700;color:#4ff59a">Ler artigo →</span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
 <footer style="padding:clamp(48px,6vw,72px) clamp(20px,5vw,72px) 32px;border-top:1px solid rgba(255,255,255,.08);background:#0b1945;color:#a9b8c6;font-size:14px">
   <div style="max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:40px">
     <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px">
@@ -324,7 +346,7 @@ const CLIENTS = [
 ];
 
 class Component extends DCLogic {
-  state = { w: window.innerWidth, revealed: false, reduce: false, faq: -1, scrolled: false, cuePos: 'center', pop: { on: false, name: '', area: '', bio: '', left: 12, width: 380, top: null, bottom: null } };
+  state = { w: window.innerWidth, revealed: false, reduce: false, faq: -1, scrolled: false, posts: [], cuePos: 'center', pop: { on: false, name: '', area: '', bio: '', left: 12, width: 380, top: null, bottom: null } };
   stagesRef = React.createRef();
   trackRef = React.createRef();
   componentDidMount() {
@@ -342,6 +364,7 @@ class Component extends DCLogic {
     this.onResize = () => { this.setState({ w: window.innerWidth }); this.measureCue(); };
     window.addEventListener('resize', this.onResize);
     this.onScroll = () => { const sc = window.scrollY > 60; if (sc !== this.state.scrolled) this.setState({ scrolled: sc }); if (this.state.pop.on) this.hideBio(); };
+    fetch('blog/posts.json').then(r => r.ok ? r.json() : []).then(l => { if (Array.isArray(l)) this.setState({ posts: l.slice(0, 6) }); }).catch(() => {});
     this.onDocClick = e => { if (!(e.target && e.target.closest && e.target.closest('[data-bio]'))) this.hideBio(); };
     document.addEventListener('click', this.onDocClick);
     window.addEventListener('scroll', this.onScroll, { passive: true }); this.onScroll();
@@ -378,7 +401,7 @@ class Component extends DCLogic {
     el.scrollBy({ left: d * el.clientWidth * 0.8, behavior: this.state.reduce ? 'auto' : 'smooth' });
   }
   renderVals() {
-    const { w, revealed: R, reduce: rd, faq, scrolled, cuePos, pop: P } = this.state;
+    const { w, revealed: R, reduce: rd, faq, scrolled, cuePos, pop: P, posts } = this.state;
     const mobile = w < 760;
     const none = 'none';
     const stage = i => ({ op: R ? 1 : 0, tf: R ? 'none' : 'translateY(28px)', tr: rd ? none : `opacity .6s ease ${i * 0.2}s, transform .6s cubic-bezier(.2,.7,.2,1) ${i * 0.2}s` });
@@ -398,6 +421,11 @@ class Component extends DCLogic {
       goDown: () => { const el = document.querySelector('[data-screen-label="02 Clientes"]'); if (el) el.scrollIntoView({ behavior: rd ? 'auto' : 'smooth', block: 'start' }); },
       pop: { left: P.left, width: P.width, top: P.top == null ? 'auto' : P.top + 'px', bottom: P.bottom == null ? 'auto' : P.bottom + 'px', name: P.name, area: P.area, bio: P.bio, op: P.on ? 1 : 0, ty: P.on ? '0' : '6px', vis: P.on ? 'visible' : 'hidden', hid: P.on ? 'false' : 'true', tr: rd ? 'none' : 'opacity .18s ease, transform .18s ease, visibility .18s' },
       hidePop: () => this.hideBio(),
+      blog: posts.map(p => ({ href: 'blog/' + p.slug + '.html', img: p.imagem, titulo: p.titulo, resumo: p.resumo, data: new Date(p.data + 'T12:00:00').toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' }) })),
+      blogDisplay: posts.length ? 'block' : 'none',
+      blogDir: (mobile || posts.length > 1) ? 'column' : 'row',
+      blogImgW: (mobile || posts.length > 1) ? 'auto' : '56%',
+      blogCols: posts.length > 1 ? 'repeat(auto-fit,minmax(min(100%,340px),1fr))' : 'minmax(0,1fr)',
       clients: CLIENTS.map((c, i) => ({ ...c, span: mobile && CLIENTS.length % 2 === 1 && i === CLIENTS.length - 1 ? 'span 2' : 'auto' })), committee: COMMITTEE.map(m => ({ ...m, over: e => this.showBio(m, e.currentTarget), out: () => this.hideBio(), cls: m.bio ? 'qmv-bio' : '', cur: m.bio ? 'pointer' : 'default', role: m.bio ? 'button' : 'presentation', tab: m.bio ? '0' : '-1', aria: m.bio ? 'Ver a biografia de ' + m.name : '' })),
       clientCols: mobile ? 'repeat(2,minmax(0,1fr))' : w < 1000 ? 'repeat(3,minmax(0,1fr))' : `repeat(${CLIENTS.length},minmax(0,1fr))`,
       cardBasis: mobile ? '80%' : COMMITTEE.length <= 2 ? 'calc((100% - 20px) / 2)' : COMMITTEE.length === 3 ? 'calc((100% - 40px) / 3)' : w < 1100 ? 'calc((100% - 40px) / 3)' : 'calc((100% - 60px) / 4)',
