@@ -153,7 +153,7 @@ footer a{color:#43506b}
 <article>
 %%CORPO%%
 </article>
-<div class="cta"><div><strong>Quer conversar sobre o assunto?</strong><span>Fale com um consultor da Quem Me Viu.</span></div>
+<div class="cta"><div><strong>Já contratou a GCC para o seu negócio?</strong><span>Fale com um consultor da Quem Me Viu.</span></div>
 <a class="btn" href="https://wa.me/5511926363815?text=%%WA%%" target="_blank" rel="noopener">%%WA_ICON%%Falar com um consultor</a></div>
 </main>
 <footer>

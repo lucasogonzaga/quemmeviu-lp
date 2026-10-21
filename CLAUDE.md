@@ -31,7 +31,7 @@ Documentação completa: `docs/DOCUMENTACAO.md`.
 - Validar com o cliente: autorização para citar a B3, papel da Baptista Luz, escopo do 24/7.
 
 ## Blog
-- Artigo = `src/blog/<slug>.html` (texto em `<p>`) + entrada em `src/blog/posts.json` (slug, titulo, data AAAA-MM-DD, resumo, imagem) + capa 1200×627 em `site/blog/img/`. `deploy/build.py` gera `site/blog/<slug>.html` (fundo claro) e `site/blog/posts.json`; a seção "Blog" da home (depois das Perguntas frequentes) lê esse JSON em tempo de execução. Não precisa editar a landing para publicar.
+- Artigo = `src/blog/<slug>.html` (texto em `<p>`) + entrada em `src/blog/posts.json` (slug, titulo, data AAAA-MM-DD, resumo, imagem) + capa 1200×627 em `site/blog/img/`. `deploy/build.py` gera `site/blog/<slug>.html` (fundo claro) e `site/blog/posts.json`; a seção "Opinião" da home (depois das Perguntas frequentes) lê esse JSON em tempo de execução. Não precisa editar a landing para publicar.
 
 ## Cookies / LGPD
 - `site/consent.js`: banner e modal de consentimento; GTM, Google Ads e Clarity só carregam após aceite (função `applyConsent`). `src/legal/` guarda o texto da política e dos termos; `deploy/build.py` gera `politica-de-privacidade.html` e `termos-de-uso.html`.
