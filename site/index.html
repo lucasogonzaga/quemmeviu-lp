@@ -19,6 +19,8 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
 :focus-visible{outline:3px solid #4ff59a;outline-offset:3px;border-radius:8px}
 @keyframes qmv-bob{0%,100%{transform:translateY(-2px)}50%{transform:translateY(5px)}}
 .qmv-bob{animation:qmv-bob 1.8s ease-in-out infinite}
+.qmv-bio{transition:box-shadow .2s ease}
+.qmv-bio:hover,.qmv-bio:focus-visible{box-shadow:0 0 0 5px rgba(79,245,154,.3)}
 @media (prefers-reduced-motion:reduce){.qmv-bob{animation:none}}
 </style>
 </helmet>
@@ -52,7 +54,13 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
       </div>
     </div>
   </div>
-  <button type="button" onClick="{{ goDown }}" aria-label="Rolar a página para ver mais" style="position:fixed;left:{{ cue.left }};right:{{ cue.right }};bottom:24px;margin-left:{{ cue.ml }};z-index:20;width:46px;height:46px;padding:0;border-radius:50%;border:1.5px solid rgba(79,245,154,.55);background:rgba(13,29,79,.6);color:#4ff59a;display:{{ cue.disp }};align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.35),0 0 18px rgba(79,245,154,.18);opacity:{{ cue.op }};pointer-events:{{ cue.pe }};transition:{{ cue.tr }}" style-hover="background:rgba(79,245,154,.2)"><svg class="qmv-bob" viewBox="0 0 24 24" aria-hidden="true" style="width:22px;height:22px" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"></path></svg></button>
+  <div role="tooltip" aria-hidden="{{ pop.hid }}" style="position:fixed;z-index:40;left:{{ pop.left }}px;top:{{ pop.top }};bottom:{{ pop.bottom }};width:{{ pop.width }}px;box-sizing:border-box;padding:22px 24px;border-radius:20px;background:linear-gradient(160deg,#1b3173,#10215a);border:1px solid rgba(79,245,154,.4);box-shadow:0 24px 60px -12px rgba(0,0,0,.65),0 0 30px rgba(79,245,154,.12);opacity:{{ pop.op }};transform:translateY({{ pop.ty }});visibility:{{ pop.vis }};pointer-events:none;transition:{{ pop.tr }}">
+  <span style="display:block;font-family:Sora,sans-serif;font-weight:700;font-size:17px;line-height:1.25">{{ pop.name }}</span>
+  <span style="display:block;margin-top:3px;font-size:13px;color:#4ff59a;font-weight:700">{{ pop.area }}</span>
+  <p style="margin:12px 0 0;font-size:14.5px;line-height:1.6;color:#dce5ec;white-space:pre-line;text-wrap:pretty">{{ pop.bio }}</p>
+</div>
+
+<button type="button" onClick="{{ goDown }}" aria-label="Rolar a página para ver mais" style="position:fixed;left:{{ cue.left }};right:{{ cue.right }};bottom:24px;margin-left:{{ cue.ml }};z-index:20;width:46px;height:46px;padding:0;border-radius:50%;border:1.5px solid rgba(79,245,154,.55);background:rgba(13,29,79,.6);color:#4ff59a;display:{{ cue.disp }};align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.35),0 0 18px rgba(79,245,154,.18);opacity:{{ cue.op }};pointer-events:{{ cue.pe }};transition:{{ cue.tr }}" style-hover="background:rgba(79,245,154,.2)"><svg class="qmv-bob" viewBox="0 0 24 24" aria-hidden="true" style="width:22px;height:22px" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"></path></svg></button>
 </section>
 
 <section data-screen-label="02 Clientes" style="padding:clamp(72px,9vw,120px) clamp(20px,5vw,72px);background:linear-gradient(180deg,#0d1d4f,#10215a 50%,#0d1d4f)">
@@ -201,10 +209,10 @@ a{color:#4ff59a;text-decoration:none}a:hover{color:#9dffc6}
         <button onClick="{{ next }}" aria-label="Próximo" style="width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;color:#eef3f7;font-size:20px;cursor:pointer" style-hover="border-color:#4ff59a;color:#4ff59a">→</button>
       </div>
     </div>
-    <div ref="{{ trackRef }}" style="display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:4px">
+    <div ref="{{ trackRef }}" onScroll="{{ hidePop }}" style="display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:4px">
       <sc-for list="{{ committee }}" as="m" hint-placeholder-count="4">
         <div style="flex:0 0 {{ cardBasis }};scroll-snap-align:start;padding:28px 24px;border-radius:24px;background:linear-gradient(160deg,#172a66,#10215a);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:14px;box-sizing:border-box">
-          <img src="{{ m.foto }}" alt="{{ m.name }}" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:2px solid rgba(79,245,154,.6);background:#10215a;box-sizing:border-box">
+          <div data-bio class="{{ m.cls }}" role="{{ m.role }}" tabindex="{{ m.tab }}" aria-label="{{ m.aria }}" onMouseEnter="{{ m.over }}" onMouseLeave="{{ m.out }}" onFocus="{{ m.over }}" onBlur="{{ m.out }}" onClick="{{ m.over }}" style="width:96px;height:96px;border-radius:50%;cursor:{{ m.cur }};flex:none"><img src="{{ m.foto }}" alt="{{ m.name }}" style="display:block;width:96px;height:96px;border-radius:50%;object-fit:cover;border:2px solid rgba(79,245,154,.6);background:#10215a;box-sizing:border-box"></div>
           <span style="font-family:Sora,sans-serif;font-weight:700;font-size:19px;line-height:1.2">{{ m.name }}</span>
           <span style="font-size:15px;line-height:1.4;color:#b9c6d2;font-weight:400"><strong style="color:#4ff59a;font-weight:700">{{ m.area }}</strong>{{ m.empresas }}</span>
           <a href="{{ m.li }}" target="_blank" rel="noopener" aria-label="LinkedIn de {{ m.name }}" style="margin-top:auto;align-self:flex-start;display:{{ m.liShow }};align-items:center;gap:8px;font-size:14px;font-weight:500;color:#dce5ec" style-hover="color:#4ff59a"><svg viewBox="0 0 24 24" style="width:18px;height:18px;flex:none"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"></path></svg>LinkedIn</a>
@@ -298,17 +306,17 @@ const FAQ = [
   ['Quanto custa?', 'R$ 0,80 por evento de consentimento ou ciência, pago à Quem Me Viu. O Serpro cobra os dados à parte.'],
   ['Como funciona a integração?', 'Por API, de forma síncrona, assíncrona ou em lote, com homologação no ambiente do Serpro.']
 ];
-// Comitê: o 5º campo (ativo) true aparece na página; o 6º é o texto das empresas, que vai depois da área (ex.: ' | iFood, Loggi'); false fica guardado até a aprovação da pessoa (mudar para true para ativar).
+// Comitê: 5º campo (ativo) true aparece na página; 6º = empresas, depois da área (ex.: ' | iFood, Loggi'); 7º = biografia exibida no pop-up ao passar o mouse sobre a foto (vazio = sem pop-up; \n\n separa parágrafos). false fica guardado até a aprovação da pessoa (mudar para true para ativar).
 const COMMITTEE = [
-  ['Vitor Magnani', 'Finanças', 'https://www.linkedin.com/in/vmagnani', 'uploads/comite/vitor-magnani.png', true, ' | Rede Líderes, iFood, Loggi'],
-  ['Gustavo Mistrinelli', 'Produto', 'https://www.linkedin.com/in/guga-m', 'uploads/comite/gustavo-mistrinelli.png', true, ' | NSTech, 99, Globant'],
-  ['Samanta Oliveira', 'Proteção de Dados', 'https://www.linkedin.com/in/samantaoliveiraa', 'uploads/comite/samanta-oliveira.png', false, ''],
-  ['Glaucia Miyazaki', 'Produto', 'https://www.linkedin.com/in/glaucias', 'uploads/comite/glaucia-miyazaki.png', true, ' | Memed, OLX, Stone'],
-  ['Bruno Salles', 'Produto', 'https://www.linkedin.com/in/brunocpsalles', 'uploads/comite/bruno-salles.png', false, ''],
-  ['André Trench', 'Finanças', 'https://www.linkedin.com/in/andr%C3%A9-trench-4a369894', 'uploads/comite/andre-trench.png', false, ''],
-  ['Patricia Cardoso', 'Tecnologia e Produto', 'https://www.linkedin.com/in/patricia-cardoso-7a166920', 'uploads/comite/patricia-cardoso.png', true, ' | CIEE, Banco BV, Banco Fibra'],
-  ['Carlos Danilo Pereira Tomaz', 'Cibersegurança e proteção de dados', 'https://www.linkedin.com/in/carlosdanilo/', 'uploads/comite/carlos-danilo-tomaz-foto.png', true, ' | Finnet, Rede Líderes']
-].map(([name, area, li, foto, ativo, empresas]) => ({ name, area, li, foto, ativo, empresas, liShow: li ? 'inline-flex' : 'none' })).filter(m => m.ativo);
+  ['Vitor Magnani', 'Finanças', 'https://www.linkedin.com/in/vmagnani', 'uploads/comite/vitor-magnani.png', true, ' | Rede Líderes, iFood, Loggi', ''],
+  ['Gustavo Mistrinelli', 'Produto', 'https://www.linkedin.com/in/guga-m', 'uploads/comite/gustavo-mistrinelli.png', true, ' | NSTech, 99, Globant', ''],
+  ['Samanta Oliveira', 'Proteção de Dados', 'https://www.linkedin.com/in/samantaoliveiraa', 'uploads/comite/samanta-oliveira.png', false, '', ''],
+  ['Glaucia Miyazaki', 'Produto', 'https://www.linkedin.com/in/glaucias', 'uploads/comite/glaucia-miyazaki.png', true, ' | Memed, OLX, Stone', ''],
+  ['Bruno Salles', 'Produto', 'https://www.linkedin.com/in/brunocpsalles', 'uploads/comite/bruno-salles.png', false, '', ''],
+  ['André Trench', 'Finanças', 'https://www.linkedin.com/in/andr%C3%A9-trench-4a369894', 'uploads/comite/andre-trench.png', false, '', ''],
+  ['Patricia Cardoso', 'Tecnologia e Produto', 'https://www.linkedin.com/in/patricia-cardoso-7a166920', 'uploads/comite/patricia-cardoso.png', true, ' | CIEE, Banco BV, Banco Fibra', ''],
+  ['Carlos Danilo Pereira Tomaz', 'Cibersegurança e proteção de dados', 'https://www.linkedin.com/in/carlosdanilo/', 'uploads/comite/carlos-danilo-tomaz-foto.png', true, ' | Finnet, Rede Líderes', '']
+].map(([name, area, li, foto, ativo, empresas, bio]) => ({ name, area, li, foto, ativo, empresas, bio, liShow: li ? 'inline-flex' : 'none' })).filter(m => m.ativo);
 const CLIENTS = [
   { name: 'B3', logo: 'logos/clientes/b3.png', h: 'clamp(50px,5.3vw,74px)' },
   { name: 'PID', logo: 'logos/clientes/pid.png', h: 'clamp(28px,3vw,44px)' },
@@ -319,7 +327,7 @@ const CLIENTS = [
 ];
 
 class Component extends DCLogic {
-  state = { w: window.innerWidth, revealed: false, reduce: false, faq: -1, scrolled: false, cuePos: 'center' };
+  state = { w: window.innerWidth, revealed: false, reduce: false, faq: -1, scrolled: false, cuePos: 'center', pop: { on: false, name: '', area: '', bio: '', left: 12, width: 380, top: null, bottom: null } };
   stagesRef = React.createRef();
   trackRef = React.createRef();
   componentDidMount() {
@@ -336,7 +344,9 @@ class Component extends DCLogic {
     };
     this.onResize = () => { this.setState({ w: window.innerWidth }); this.measureCue(); };
     window.addEventListener('resize', this.onResize);
-    this.onScroll = () => { const sc = window.scrollY > 60; if (sc !== this.state.scrolled) this.setState({ scrolled: sc }); };
+    this.onScroll = () => { const sc = window.scrollY > 60; if (sc !== this.state.scrolled) this.setState({ scrolled: sc }); if (this.state.pop.on) this.hideBio(); };
+    this.onDocClick = e => { if (!(e.target && e.target.closest && e.target.closest('[data-bio]'))) this.hideBio(); };
+    document.addEventListener('click', this.onDocClick);
     window.addEventListener('scroll', this.onScroll, { passive: true }); this.onScroll();
     window.addEventListener('load', this.measureCue); setTimeout(this.measureCue, 400); setTimeout(this.measureCue, 1500);
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { this.setState({ reduce: true, revealed: true }); return; }
@@ -345,13 +355,33 @@ class Component extends DCLogic {
     }, { threshold: 0.25 });
     if (this.stagesRef.current) this.io.observe(this.stagesRef.current);
   }
-  componentWillUnmount() { window.removeEventListener('resize', this.onResize); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('load', this.measureCue); this.io && this.io.disconnect(); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('load', this.measureCue); document.removeEventListener('click', this.onDocClick); this.io && this.io.disconnect(); }
+  showBio(m, el) {
+    if (!m.bio || !el) return;
+    const card = el.parentElement.getBoundingClientRect(), vw = window.innerWidth, vh = window.innerHeight, g = 12;
+    const width = Math.min(420, vw - 2 * g);
+    // fase 1: coloca o conteúdo (invisível) para medir a altura real
+    this.setState({ pop: { on: false, name: m.name, area: m.area, bio: m.bio, left: g, width, top: g, bottom: null } }, () => {
+      const tip = document.querySelector('[role="tooltip"]'); if (!tip) return;
+      const h = tip.offsetHeight;
+      let left, top;
+      if (card.right + g + width <= vw - g) { left = card.right + g; top = card.top; }                 // à direita do card
+      else if (card.left - g - width >= g) { left = card.left - g - width; top = card.top; }         // à esquerda do card
+      else {                                                                                       // sem espaço lateral (celular): abaixo ou acima
+        left = Math.min(Math.max(g, card.left), vw - width - g);
+        top = card.bottom + 10 + h <= vh - g ? card.bottom + 10 : card.top - 10 - h >= g ? card.top - 10 - h : vh - h - g;
+      }
+      top = Math.min(Math.max(g, top), Math.max(g, vh - h - g));
+      this.setState({ pop: { on: true, name: m.name, area: m.area, bio: m.bio, left, width, top, bottom: null } });
+    });
+  }
+  hideBio() { if (this.state.pop.on) this.setState({ pop: { ...this.state.pop, on: false } }); }
   scroll(d) {
     const el = this.trackRef.current; if (!el) return;
     el.scrollBy({ left: d * el.clientWidth * 0.8, behavior: this.state.reduce ? 'auto' : 'smooth' });
   }
   renderVals() {
-    const { w, revealed: R, reduce: rd, faq, scrolled, cuePos } = this.state;
+    const { w, revealed: R, reduce: rd, faq, scrolled, cuePos, pop: P } = this.state;
     const mobile = w < 760;
     const none = 'none';
     const stage = i => ({ op: R ? 1 : 0, tf: R ? 'none' : 'translateY(28px)', tr: rd ? none : `opacity .6s ease ${i * 0.2}s, transform .6s cubic-bezier(.2,.7,.2,1) ${i * 0.2}s` });
@@ -369,7 +399,9 @@ class Component extends DCLogic {
       mbox: { clip: R ? 'inset(0 0 0 0)' : 'inset(0 100% 0 0)', tr: rd ? none : 'clip-path .6s cubic-bezier(.6,0,.2,1) 1.4s' },
       cue: { disp: mobile ? 'none' : 'flex', op: (scrolled || cuePos === 'none') ? 0 : 1, pe: (scrolled || cuePos === 'none') ? 'none' : 'auto', left: cuePos === 'right' ? 'auto' : '50%', right: cuePos === 'right' ? '28px' : 'auto', ml: cuePos === 'right' ? '0' : '-23px', tr: rd ? none : 'opacity .35s ease, background .2s ease' },
       goDown: () => { const el = document.querySelector('[data-screen-label="02 Clientes"]'); if (el) el.scrollIntoView({ behavior: rd ? 'auto' : 'smooth', block: 'start' }); },
-      clients: CLIENTS.map((c, i) => ({ ...c, span: mobile && CLIENTS.length % 2 === 1 && i === CLIENTS.length - 1 ? 'span 2' : 'auto' })), committee: COMMITTEE,
+      pop: { left: P.left, width: P.width, top: P.top == null ? 'auto' : P.top + 'px', bottom: P.bottom == null ? 'auto' : P.bottom + 'px', name: P.name, area: P.area, bio: P.bio, op: P.on ? 1 : 0, ty: P.on ? '0' : '6px', vis: P.on ? 'visible' : 'hidden', hid: P.on ? 'false' : 'true', tr: rd ? 'none' : 'opacity .18s ease, transform .18s ease, visibility .18s' },
+      hidePop: () => this.hideBio(),
+      clients: CLIENTS.map((c, i) => ({ ...c, span: mobile && CLIENTS.length % 2 === 1 && i === CLIENTS.length - 1 ? 'span 2' : 'auto' })), committee: COMMITTEE.map(m => ({ ...m, over: e => this.showBio(m, e.currentTarget), out: () => this.hideBio(), cls: m.bio ? 'qmv-bio' : '', cur: m.bio ? 'pointer' : 'default', role: m.bio ? 'button' : 'presentation', tab: m.bio ? '0' : '-1', aria: m.bio ? 'Ver a biografia de ' + m.name : '' })),
       clientCols: mobile ? 'repeat(2,minmax(0,1fr))' : w < 1000 ? 'repeat(3,minmax(0,1fr))' : `repeat(${CLIENTS.length},minmax(0,1fr))`,
       cardBasis: mobile ? '80%' : COMMITTEE.length <= 2 ? 'calc((100% - 20px) / 2)' : COMMITTEE.length === 3 ? 'calc((100% - 40px) / 3)' : w < 1100 ? 'calc((100% - 40px) / 3)' : 'calc((100% - 60px) / 4)',
       arrowsDisplay: COMMITTEE.length > (mobile ? 1 : w < 1100 ? 3 : 4) ? 'flex' : 'none',
