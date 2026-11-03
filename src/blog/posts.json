@@ -5,5 +5,12 @@
     "data": "2026-10-21",
     "resumo": "Exposição de credenciais de acesso a sistema de videomonitoramento reacende debate sobre rastreabilidade, transparência e responsabilidade na proteção das informações.",
     "imagem": "blog/img/smart-sampa.jpg"
+  },
+  {
+    "slug": "comite-consultivo-no-ambiente-empresarial",
+    "titulo": "A importância do comitê consultivo no ambiente empresarial",
+    "data": "2026-11-03",
+    "resumo": "Conforme uma empresa cresce, as decisões deixam de envolver apenas questões operacionais e passam a exigir uma visão mais ampla do negócio. Nesse processo, ouvir pessoas com experiências diferentes das que já existem dentro da organização faz diferença.",
+    "imagem": "blog/img/comite-consultivo.jpg"
   }
 ]
