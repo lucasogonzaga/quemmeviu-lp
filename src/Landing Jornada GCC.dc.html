@@ -370,7 +370,7 @@ class Component extends DCLogic {
     this.onResize = () => { this.setState({ w: window.innerWidth }); this.measureCue(); };
     window.addEventListener('resize', this.onResize);
     this.onScroll = () => { const sc = window.scrollY > 60; if (sc !== this.state.scrolled) this.setState({ scrolled: sc }); if (this.state.pop.on) this.hideBio(); };
-    fetch('blog/posts.json').then(r => r.ok ? r.json() : []).then(l => { if (Array.isArray(l)) this.setState({ posts: l.slice(0, 6) }); }).catch(() => {});
+    fetch('blog/posts.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : []).then(l => { if (Array.isArray(l)) this.setState({ posts: l.slice(0, 6) }); }).catch(() => {});
     this.onDocClick = e => { if (!(e.target && e.target.closest && e.target.closest('[data-bio]'))) this.hideBio(); };
     document.addEventListener('click', this.onDocClick);
     window.addEventListener('scroll', this.onScroll, { passive: true }); this.onScroll();
